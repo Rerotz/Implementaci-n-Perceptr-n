@@ -39,3 +39,29 @@ class Perceptron {
                 let yhat = linear(s)
                 let err = yhat - yi
                 for j in 0..<nInputs {
+                    dw[j] += err * xi[j]
+                }
+                db += err
+            }
+            for j in 0..<nInputs {
+                w[j] -= lr * dw[j] / Double(X.count)
+            }
+            b -= lr * db / Double(X.count)
+        }
+    }
+}
+
+// =================== DEMO AND ===================
+let X = [[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]]
+let Y = [0.0,0.0,0.0,1.0]
+
+let perceptron = Perceptron(nInputs: 2, lr: 0.1)
+perceptron.train(X: X, Y: Y, epochs: 100)
+
+print("=== Perceptron AND (Swift, activación lineal) ===\n")
+for xi in X {
+    let yhat = perceptron.predict(xi)        // salida lineal
+    let label = yhat >= 0.5 ? 1 : 0          // binarización con threshold
+    let desc = label == 1 ? "VERDADERO" : "FALSO"
+    print("Entrada: \(xi) -> salida bruta: \(String(format: "%.4f", yhat)) -> clasificación: \(label) (\(desc))")
+}
